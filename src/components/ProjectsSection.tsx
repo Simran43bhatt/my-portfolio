@@ -60,33 +60,33 @@ const ProjectsSection = () => {
             Featured Projects
           </h2>
           <p className="text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-            Explore my portfolio of innovative solutions combining technical expertise 
+            Explore my portfolio of innovative solutions combining technical expertise
             with strategic business thinking.
           </p>
         </div>
 
         <div className="grid lg:grid-cols-2 xl:grid-cols-3 gap-8">
           {projects.map((project, index) => (
-            <Card 
+            <Card
               key={project.title}
               className="group hover:shadow-intense transition-all duration-500 hover:scale-105 animate-scale-in bg-card/50 backdrop-blur-sm border-0 relative overflow-hidden"
               style={{ animationDelay: `${index * 0.2}s` }}
             >
               {/* Gradient background */}
               <div className={`absolute inset-0 bg-gradient-to-br ${project.gradient} opacity-5 group-hover:opacity-10 transition-opacity duration-300`}></div>
-              
+
               <CardHeader className="relative">
                 <div className="flex items-center gap-4 mb-4">
                   <div className={`p-3 rounded-full bg-gradient-to-br ${project.gradient}`}>
                     <project.icon className="w-6 h-6 text-white" />
                   </div>
                   <div className="flex gap-2">
-                    <Button size="sm" variant="ghost" className="h-8 w-8 p-0 hover:bg-primary/10">
-                      {project.link && <ExternalLink className="w-4 h-4" />}
-                    </Button>
-                    <Button size="sm" variant="ghost" className="h-8 w-8 p-0 hover:bg-primary/10">
-                      {project.github && <Github className="w-4 h-4" />}
-                    </Button>
+                    {project.link && <Button onClick={() => window.open(project.link, '_blank')} size="sm" variant="ghost" className="h-8 w-8 p-0 hover:bg-primary/10">
+                      <ExternalLink className="w-4 h-4" />
+                    </Button>}
+                    {project.github && <Button onClick={() => window.open(project.github, '_blank')} size="sm" variant="ghost" className="h-8 w-8 p-0 hover:bg-primary/10">
+                      <Github className="w-4 h-4" />
+                    </Button>}
                   </div>
                 </div>
                 <CardTitle className="text-xl group-hover:text-primary transition-colors">
@@ -116,9 +116,9 @@ const ProjectsSection = () => {
                   <h4 className="font-semibold mb-3 text-foreground">Technologies:</h4>
                   <div className="flex flex-wrap gap-2">
                     {project.technologies.map((tech) => (
-                      <Badge 
-                        key={tech} 
-                        variant="secondary" 
+                      <Badge
+                        key={tech}
+                        variant="secondary"
                         className="text-xs hover:bg-primary hover:text-white transition-colors cursor-default"
                       >
                         {tech}
@@ -136,7 +136,7 @@ const ProjectsSection = () => {
           <p className="text-muted-foreground mb-6">
             Want to see more of my work or collaborate on something amazing?
           </p>
-          <Button 
+          <Button
             size="lg"
             className="bg-gradient-primary hover:shadow-glow transition-all duration-300"
             onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
