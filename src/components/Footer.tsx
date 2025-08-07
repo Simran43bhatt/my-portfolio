@@ -1,10 +1,25 @@
 import { Heart, ArrowUp } from "lucide-react";
 import { Button } from "./ui/button";
-
+import { trackEvent } from "@/lib/analytics";
+import { AnalyticsEvent } from "@/lib/analytics/events";
 
 const Footer = () => {
   const scrollToTop = () => {
+    trackEvent(AnalyticsEvent.CLICKED_LINK, {
+      link: '#top',
+      linkType: 'sectionRedirect',
+      section: 'footer',
+    });
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleFooterLinkClick = (sectionId: string) => {
+    trackEvent(AnalyticsEvent.CLICKED_LINK, {
+      link: `#${sectionId}`,
+      linkType: 'sectionRedirect',
+      section: 'footer',
+    });
+    document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
@@ -30,19 +45,19 @@ const Footer = () => {
           {/* Quick Links */}
           <div className="flex flex-wrap gap-6 text-sm">
             <button 
-              onClick={() => document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' })}
+              onClick={() => handleFooterLinkClick('about')}
               className="hover:text-primary-glow transition-colors duration-300"
             >
               About
             </button>
             <button 
-              onClick={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })}
+              onClick={() => handleFooterLinkClick('projects')}
               className="hover:text-primary-glow transition-colors duration-300"
             >
               Projects
             </button>
             <button 
-              onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+              onClick={() => handleFooterLinkClick('contact')}
               className="hover:text-primary-glow transition-colors duration-300"
             >
               Contact

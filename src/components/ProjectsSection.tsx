@@ -3,6 +3,8 @@ import { ExternalLink, Github, Activity, BarChart3, Users, Zap } from "lucide-re
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
+import { trackEvent } from "@/lib/analytics";
+import { AnalyticsEvent } from "@/lib/analytics/events";
 
 const ProjectsSection = () => {
   const projects = [
@@ -52,6 +54,26 @@ const ProjectsSection = () => {
     }
   ];
 
+  const handleProjectLinkClick = (projectTitle: string, linkType: 'demo' | 'github', url: string) => {
+    trackEvent(AnalyticsEvent.CLICKED_LINK, {
+      link: url,
+      linkType: 'externalRedirect',
+      section: 'projects',
+    });
+    
+    window.open(url, '_blank');
+  };
+
+  const handleWorkTogetherClick = () => {
+    trackEvent(AnalyticsEvent.CLICKED_LINK, {
+      link: '#contact',
+      linkType: 'sectionRedirect',
+      section: 'projects',
+    });
+    
+    document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
     <section id="projects" className="py-20 bg-muted/30">
       <div className="container mx-auto px-6">
@@ -81,12 +103,26 @@ const ProjectsSection = () => {
                     <project.icon className="w-6 h-6 text-white" />
                   </div>
                   <div className="flex gap-2">
-                    {project.link && <Button onClick={() => window.open(project.link, '_blank')} size="sm" variant="ghost" className="h-8 w-8 p-0 hover:bg-primary/10">
-                      <ExternalLink className="w-4 h-4" />
-                    </Button>}
-                    {project.github && <Button onClick={() => window.open(project.github, '_blank')} size="sm" variant="ghost" className="h-8 w-8 p-0 hover:bg-primary/10">
-                      <Github className="w-4 h-4" />
-                    </Button>}
+                    {project.link && (
+                      <Button 
+                        onClick={() => handleProjectLinkClick(project.title, 'demo', project.link!)}
+                        size="sm" 
+                        variant="ghost" 
+                        className="h-8 w-8 p-0 hover:bg-primary/10"
+                      >
+                        <ExternalLink className="w-4 h-4" />
+                      </Button>
+                    )}
+                    {project.github && (
+                      <Button 
+                        onClick={() => handleProjectLinkClick(project.title, 'github', project.github!)}
+                        size="sm" 
+                        variant="ghost" 
+                        className="h-8 w-8 p-0 hover:bg-primary/10"
+                      >
+                        <Github className="w-4 h-4" />
+                      </Button>
+                    )}
                   </div>
                 </div>
                 <CardTitle className="text-xl group-hover:text-primary transition-colors">
@@ -98,29 +134,23 @@ const ProjectsSection = () => {
               </CardHeader>
 
               <CardContent className="relative space-y-6">
-                {/* Key Features */}
                 <div>
-                  <h4 className="font-semibold mb-3 text-foreground">Key Features:</h4>
-                  <ul className="space-y-1 text-sm text-muted-foreground">
+                  <h4 className="font-semibold mb-3 text-foreground">Key Features</h4>
+                  <ul className="space-y-2">
                     {project.features.map((feature, featureIndex) => (
-                      <li key={featureIndex} className="flex items-start gap-2">
-                        <Zap className="w-3 h-3 mt-1 text-primary flex-shrink-0" />
-                        {feature}
+                      <li key={featureIndex} className="flex items-start gap-2 text-sm text-muted-foreground">
+                        <Zap className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
+                        <span>{feature}</span>
                       </li>
                     ))}
                   </ul>
                 </div>
 
-                {/* Technologies */}
                 <div>
-                  <h4 className="font-semibold mb-3 text-foreground">Technologies:</h4>
+                  <h4 className="font-semibold mb-3 text-foreground">Technologies</h4>
                   <div className="flex flex-wrap gap-2">
                     {project.technologies.map((tech) => (
-                      <Badge
-                        key={tech}
-                        variant="secondary"
-                        className="text-xs hover:bg-primary hover:text-white transition-colors cursor-default"
-                      >
+                      <Badge key={tech} variant="outline" className="text-xs">
                         {tech}
                       </Badge>
                     ))}
@@ -139,7 +169,7 @@ const ProjectsSection = () => {
           <Button
             size="lg"
             className="bg-gradient-primary hover:shadow-glow transition-all duration-300"
-            onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+            onClick={handleWorkTogetherClick}
           >
             Let's Work Together
             <ExternalLink className="w-4 h-4 ml-2" />

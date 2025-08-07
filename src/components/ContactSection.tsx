@@ -8,20 +8,82 @@ import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { useToast } from "../hooks/use-toast";
+import { loginEvent, trackEvent } from "@/lib/analytics";
+import { AnalyticsEvent } from "@/lib/analytics/events";
 
 const ContactSection = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
+    phone: '',
     subject: '',
     message: ''
   });
   const { toast } = useToast();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Here you would integrate with your event tracking backend
-    console.log('Contact form submitted:', formData);
+    
+    // Validate required fields
+    if (!formData.name.trim()) {
+      toast({
+        title: "Name Required",
+        description: "Please enter your name to continue.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    if (!formData.email.trim()) {
+      toast({
+        title: "Email Required",
+        description: "Please enter your email address to continue.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    if (!formData.phone.trim()) {
+      toast({
+        title: "Phone Required",
+        description: "Please enter your phone number to continue.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      toast({
+        title: "Invalid Email",
+        description: "Please enter a valid email address.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    // Validate phone format (basic validation for Indian numbers)
+    const phoneRegex = /^[6-9]\d{9}$/;
+    if (!phoneRegex.test(formData.phone.replace(/\s/g, ''))) {
+      toast({
+        title: "Invalid Phone Number",
+        description: "Please enter a valid 10-digit phone number.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    await loginEvent({
+      name: formData.name,
+      phone: formData.phone,
+      email: formData.email,
+    });
+
+    await trackEvent(AnalyticsEvent.FORM_SUBMITTED, {
+      subject: formData.subject,
+      message: formData.message,
+    });
     
     toast({
       title: "Message Sent!",
@@ -29,7 +91,7 @@ const ContactSection = () => {
     });
     
     // Reset form
-    setFormData({ name: '', email: '', subject: '', message: '' });
+    setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -37,6 +99,22 @@ const ContactSection = () => {
       ...prev,
       [e.target.name]: e.target.value
     }));
+  };
+
+  const handleInputFocus = (fieldName: string) => {
+    trackEvent(AnalyticsEvent.FORM_INPUT_FIELD_FOCUSED, {
+      fieldName,
+      timestamp: new Date().toISOString(),
+    });
+  };
+
+  const handleLinkClick = (linkType: string, url: string) => {
+    trackEvent(AnalyticsEvent.CLICKED_LINK, {
+      link: url,
+      linkType: 'externalRedirect',
+      section: 'contact',
+    });
+    window.open(url, '_blank');
   };
 
   const contactInfo = [
@@ -108,7 +186,7 @@ const ContactSection = () => {
                 <Card 
                   key={info.title}
                   className="group hover:shadow-card transition-all duration-300 hover:scale-105 cursor-pointer bg-gradient-to-r from-card to-muted/20"
-                  onClick={() => info.link !== '#' && window.open(info.link, '_blank')}
+                  onClick={() => info.link !== '#' && handleLinkClick(info.title.toLowerCase(), info.link)}
                 >
                   <CardContent className="p-6">
                     <div className="flex items-center gap-4">
@@ -137,17 +215,10 @@ const ContactSection = () => {
                     variant="outline"
                     size="sm"
                     className="hover:scale-110 transition-transform duration-300"
-                    asChild
+                    onClick={() => handleLinkClick(social.title.toLowerCase(), social.link)}
                   >
-                    <a 
-                      href={social.link} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2"
-                    >
-                      <social.icon className={`w-4 h-4 ${social.color}`} />
-                      {social.title}
-                    </a>
+                    <social.icon className={`w-4 h-4 ${social.color}`} />
+                    {social.title}
                   </Button>
                 ))}
               </div>
@@ -163,19 +234,20 @@ const ContactSection = () => {
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="name">Name</Label>
+                    <Label htmlFor="name">Name *</Label>
                     <Input
                       id="name"
                       name="name"
                       placeholder="Your name"
                       value={formData.name}
                       onChange={handleInputChange}
+                      onFocus={() => handleInputFocus('name')}
                       required
                       className="transition-all duration-300 focus:scale-105"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
+                    <Label htmlFor="email">Email *</Label>
                     <Input
                       id="email"
                       name="email"
@@ -183,10 +255,26 @@ const ContactSection = () => {
                       placeholder="your.email@example.com"
                       value={formData.email}
                       onChange={handleInputChange}
+                      onFocus={() => handleInputFocus('email')}
                       required
                       className="transition-all duration-300 focus:scale-105"
                     />
                   </div>
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="phone">Phone Number *</Label>
+                  <Input
+                    id="phone"
+                    name="phone"
+                    type="tel"
+                    placeholder="10-digit phone number"
+                    value={formData.phone}
+                    onChange={handleInputChange}
+                    onFocus={() => handleInputFocus('phone')}
+                    required
+                    className="transition-all duration-300 focus:scale-105"
+                  />
                 </div>
                 
                 <div className="space-y-2">
@@ -197,7 +285,7 @@ const ContactSection = () => {
                     placeholder="What's this about?"
                     value={formData.subject}
                     onChange={handleInputChange}
-                    required
+                    onFocus={() => handleInputFocus('subject')}
                     className="transition-all duration-300 focus:scale-105"
                   />
                 </div>
@@ -210,7 +298,7 @@ const ContactSection = () => {
                     placeholder="Tell me about your project or idea..."
                     value={formData.message}
                     onChange={handleInputChange}
-                    required
+                    onFocus={() => handleInputFocus('message')}
                     rows={5}
                     className="transition-all duration-300 focus:scale-105 resize-none"
                   />

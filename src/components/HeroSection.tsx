@@ -1,8 +1,28 @@
 
 import { Github, Linkedin, Mail, Phone, ExternalLink } from "lucide-react";
 import { Button } from "./ui/button";
+import { trackEvent } from "@/lib/analytics";
+import { AnalyticsEvent } from "@/lib/analytics/events";
 
 const HeroSection = () => {
+  const handleSocialLinkClick = (platform: string, url: string) => {
+    trackEvent(AnalyticsEvent.CLICKED_LINK, {
+      link: url,
+      linkType: 'externalRedirect',
+      section: 'hero',
+    });
+    window.open(url, '_blank');
+  };
+
+  const handleCTAClick = (sectionId: string) => {
+    trackEvent(AnalyticsEvent.CLICKED_LINK, {
+      link: `#${sectionId}`,
+      linkType: 'sectionRedirect',
+      section: 'hero',
+    });
+    document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
     <section className="min-h-screen flex items-center py-14 justify-center bg-gradient-hero relative overflow-hidden">
       {/* Animated background elements with enhanced animations */}
@@ -38,45 +58,37 @@ const HeroSection = () => {
                 variant="outline" 
                 className="bg-white/10 border-white/20 text-white hover:bg-white/20 hover:scale-105 backdrop-blur-sm transition-all duration-300 animate-scale-in"
                 style={{ animationDelay: '1.2s' }}
-                asChild
+                onClick={() => handleSocialLinkClick('linkedin', 'https://linkedin.com/in/simran-bhatt-940ba3256/')}
               >
-                <a href="https://linkedin.com/in/simran-bhatt-940ba3256/" target="_blank" rel="noopener noreferrer">
-                  <Linkedin className="w-4 h-4 mr-2" />
-                  LinkedIn
-                </a>
+                <Linkedin className="w-4 h-4 mr-2" />
+                LinkedIn
               </Button>
               <Button 
                 variant="outline" 
                 className="bg-white/10 border-white/20 text-white hover:bg-white/20 hover:scale-105 backdrop-blur-sm transition-all duration-300 animate-scale-in"
                 style={{ animationDelay: '1.4s' }}
-                asChild
+                onClick={() => handleSocialLinkClick('github', 'https://github.com/Simran43bhatt')}
               >
-                <a href="https://github.com/Simran43bhatt" target="_blank" rel="noopener noreferrer">
-                  <Github className="w-4 h-4 mr-2" />
-                  GitHub
-                </a>
+                <Github className="w-4 h-4 mr-2" />
+                GitHub
               </Button>
               <Button 
                 variant="outline" 
                 className="bg-white/10 border-white/20 text-white hover:bg-white/20 hover:scale-105 backdrop-blur-sm transition-all duration-300 animate-scale-in"
                 style={{ animationDelay: '1.6s' }}
-                asChild
+                onClick={() => handleSocialLinkClick('email', 'mailto:simran.43bhatt@gmail.com')}
               >
-                <a href="mailto:simran.43bhatt@gmail.com">
-                  <Mail className="w-4 h-4 mr-2" />
-                  Email
-                </a>
+                <Mail className="w-4 h-4 mr-2" />
+                Email
               </Button>
               <Button 
                 variant="outline" 
                 className="bg-white/10 border-white/20 text-white hover:bg-white/20 hover:scale-105 backdrop-blur-sm transition-all duration-300 animate-scale-in"
                 style={{ animationDelay: '1.8s' }}
-                asChild
+                onClick={() => handleSocialLinkClick('phone', 'tel:6230560983')}
               >
-                <a href="tel:6230560983">
-                  <Phone className="w-4 h-4 mr-2" />
-                  Call
-                </a>
+                <Phone className="w-4 h-4 mr-2" />
+                Call
               </Button>
             </div>
 
@@ -86,7 +98,7 @@ const HeroSection = () => {
                 size="lg"
                 className="bg-white text-primary hover:bg-white/90 hover:scale-105 shadow-glow hover:shadow-intense transition-all duration-300 animate-bounce-in"
                 style={{ animationDelay: '2s' }}
-                onClick={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })}
+                onClick={() => handleCTAClick('projects')}
               >
                 View My Work
                 <ExternalLink className="w-4 h-4 ml-2 animate-wiggle" />
@@ -96,26 +108,25 @@ const HeroSection = () => {
                 variant="outline"
                 className="bg-white/10 border-white/20 text-white hover:bg-white/20 hover:scale-105 backdrop-blur-sm transition-all duration-300 animate-bounce-in"
                 style={{ animationDelay: '2.2s' }}
-                onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+                onClick={() => handleCTAClick('contact')}
               >
                 Get In Touch
               </Button>
             </div>
           </div>
 
-          {/* Right side - Photo */}
-          <div className="flex-1 flex justify-center lg:justify-end animate-slide-in-right" style={{ animationDelay: '0.5s' }}>
-            <div className="relative group">
-              <div className="absolute inset-0 bg-gradient-primary rounded-full blur-2xl opacity-50 animate-pulse-glow group-hover:opacity-80 transition-opacity duration-500"></div>
-              <div className="absolute -inset-4 bg-gradient-to-r from-primary via-accent to-primary-glow rounded-full blur-xl opacity-30 animate-gradient-shift"></div>
-              <img
-                // src="/lovable-uploads/8de8cfcd-b928-46a7-81b3-77d806137180.png"
-                src="simran.png"
-                alt="Simran Bhatt"
-                className="relative w-80 h-80 lg:w-96 lg:h-96 object-cover rounded-full shadow-intense border-4 border-white/20 backdrop-blur-sm hover:scale-110 hover:rotate-2 transition-all duration-500 animate-scale-in group-hover:border-white/40"
-                style={{ objectPosition: 'center 20%', animationDelay: '1s' }}
-              />
-              <div className="absolute inset-0 rounded-full bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 animate-shimmer"></div>
+          {/* Right side - Visual element or image placeholder */}
+          <div className="flex-1 flex justify-center lg:justify-end animate-fade-in-right" style={{ animationDelay: '1.5s' }}>
+            <div className="relative">
+              {/* Placeholder for profile image or illustration */}
+              <div className="w-80 h-80 rounded-full bg-gradient-to-br from-primary/20 to-accent/20 border-4 border-white/20 backdrop-blur-sm flex items-center justify-center">
+                <img src="/simran.webp" alt="Profile" className="w-full z-20 h-full object-cover rounded-full" />
+              </div>
+              
+              {/* Floating elements around the profile */}
+              <div className="absolute -top-4 -right-4 w-8 h-8 bg-accent/40 rounded-full animate-float"></div>
+              <div className="absolute -bottom-4 -left-4 w-6 h-6 bg-primary/40 rounded-full animate-float-slow"></div>
+              <div className="absolute top-1/2 -right-8 w-4 h-4 bg-secondary/40 rounded-full animate-float" style={{ animationDelay: '0.5s' }}></div>
             </div>
           </div>
         </div>

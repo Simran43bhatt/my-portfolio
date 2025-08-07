@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 
 import { Menu, X } from "lucide-react";
 import { Button } from "./ui/button";
+import { trackEvent } from "@/lib/analytics";
+import { AnalyticsEvent } from "@/lib/analytics/events";
 
 const Navigation = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -21,6 +23,13 @@ const Navigation = () => {
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
       setIsMobileMenuOpen(false);
+      
+      // Track navigation click
+      trackEvent(AnalyticsEvent.CLICKED_LINK, {
+        link: `#${sectionId}`,
+        linkType: 'sectionRedirect',
+        section: sectionId,
+      });
     }
   };
 
