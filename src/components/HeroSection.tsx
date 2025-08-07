@@ -4,7 +4,7 @@ import { Button } from "./ui/button";
 
 const HeroSection = () => {
   return (
-    <section className="min-h-screen flex items-center justify-center bg-gradient-hero relative overflow-hidden">
+    <section className="min-h-screen flex items-center py-14 justify-center bg-gradient-hero relative overflow-hidden">
       {/* Animated background elements with enhanced animations */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-20 left-20 w-72 h-72 bg-primary/20 rounded-full blur-3xl animate-float-slow"></div>
@@ -20,8 +20,8 @@ const HeroSection = () => {
           <div className="flex-1 text-white">
             <h1 className="text-5xl lg:text-7xl font-bold mb-6 leading-tight animate-fade-in-up">
               <span className="inline-block animate-fade-in-left" style={{ animationDelay: '0.2s' }}>Hi, I'm{" "}</span>
-              <span className="bg-gradient-to-r from-white via-primary-glow to-white bg-clip-text text-transparent animate-bounce-in bg-[length:200%_100%] animate-gradient-shift" style={{ animationDelay: '0.5s' }}>
-                Simran
+              <span className="text-white animate-bounce-in " style={{ animationDelay: '0.5s' }}>
+                {" "}Simran
               </span>
             </h1>
             <p className="text-xl lg:text-2xl mb-4 text-white/90 animate-fade-in-left" style={{ animationDelay: '0.8s' }}>

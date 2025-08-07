@@ -18,8 +18,8 @@ const ProjectsSection = () => {
         "CI/CD workflows for production deployment"
       ],
       technologies: ["Node.js", "Express", "TypeScript", "Prisma", "Redis", "BullMQ", "PostgreSQL", "Zod", "Winston"],
-      link: "#",
-      github: "#",
+      link: "https://eventtracker-production-8b08.up.railway.app/",
+      github: "https://github.com/Simran43bhatt/eventTracker",
       gradient: "from-primary to-secondary"
     },
     {
@@ -34,8 +34,6 @@ const ProjectsSection = () => {
         "Performance metrics monitoring"
       ],
       technologies: ["Google Sheets API", "JavaScript", "Data Analytics", "Marketing Automation"],
-      link: "#",
-      github: "#",
       gradient: "from-secondary to-accent"
     },
     {
@@ -50,8 +48,6 @@ const ProjectsSection = () => {
         "YouTube-led signups growth"
       ],
       technologies: ["Growth Strategy", "Customer Analytics", "SEO", "VidIQ", "Content Strategy"],
-      link: "#",
-      github: "#",
       gradient: "from-accent to-primary"
     }
   ];
@@ -86,10 +82,10 @@ const ProjectsSection = () => {
                   </div>
                   <div className="flex gap-2">
                     <Button size="sm" variant="ghost" className="h-8 w-8 p-0 hover:bg-primary/10">
-                      <ExternalLink className="w-4 h-4" />
+                      {project.link && <ExternalLink className="w-4 h-4" />}
                     </Button>
                     <Button size="sm" variant="ghost" className="h-8 w-8 p-0 hover:bg-primary/10">
-                      <Github className="w-4 h-4" />
+                      {project.github && <Github className="w-4 h-4" />}
                     </Button>
                   </div>
                 </div>
