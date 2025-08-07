@@ -109,7 +109,8 @@ const HeroSection = () => {
               <div className="absolute inset-0 bg-gradient-primary rounded-full blur-2xl opacity-50 animate-pulse-glow group-hover:opacity-80 transition-opacity duration-500"></div>
               <div className="absolute -inset-4 bg-gradient-to-r from-primary via-accent to-primary-glow rounded-full blur-xl opacity-30 animate-gradient-shift"></div>
               <img
-                src="/lovable-uploads/8de8cfcd-b928-46a7-81b3-77d806137180.png"
+                // src="/lovable-uploads/8de8cfcd-b928-46a7-81b3-77d806137180.png"
+                src="simran.png"
                 alt="Simran Bhatt"
                 className="relative w-80 h-80 lg:w-96 lg:h-96 object-cover rounded-full shadow-intense border-4 border-white/20 backdrop-blur-sm hover:scale-110 hover:rotate-2 transition-all duration-500 animate-scale-in group-hover:border-white/40"
                 style={{ objectPosition: 'center 20%', animationDelay: '1s' }}
